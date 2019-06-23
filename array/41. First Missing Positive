@@ -1,0 +1,20 @@
+//Given an unsorted integer array, find the smallest missing positive integer.
+
+//DP
+class Solution {
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        if(nums.size() == 0)return 1;//注意边界条件
+        
+        vector<bool> visit(nums.size(), false);
+        for(int i:nums){
+            if(i > 0 && i < nums.size()+1)visit[i-1] = true;
+        }//动态规划
+        
+        int ans;
+        for(int i = 0; i < nums.size()+1; i++){
+            if(!visit[i])return i+1;
+        }
+        return nums.size()+1;
+    }
+};
