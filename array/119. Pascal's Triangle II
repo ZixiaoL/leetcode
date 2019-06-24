@@ -1,0 +1,39 @@
+//Given a non-negative index k where k ≤ 33, return the kth index row of the Pascal's triangle.
+//Note that the row index starts from 0.
+//Could you optimize your algorithm to use only O(k) extra space?
+
+//Math-combination
+class Solution {
+public:
+vector<int> getRow(int rowIndex) {
+    vector<int> ans(rowIndex+1,1);
+    int small = rowIndex/2;
+    long comb = 1;//否则后面乘法运算会溢出
+    int j = 1;
+    for (int i=rowIndex; i>small; i--){
+        comb *= i;
+        comb /= j;
+        j ++;
+        ans[i-1] = (int)comb;
+        ans[j-1] = (int)comb;
+    }
+    return ans;
+}
+};
+
+//Math
+class Solution {
+public:
+    vector<int> getRow(int rowIndex) {
+        vector<int> vi(rowIndex + 1);
+       	vi[0] = 1;
+        for (int i = 0; i <= rowIndex ; ++i)
+        {
+        	for (int j = i; j > 0; --j)
+        	{
+	        	vi[j] = vi[j] + vi[j-1];
+        	}
+        }
+        return vi;
+    }
+};
