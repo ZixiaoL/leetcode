@@ -1,0 +1,22 @@
+//Given an array of citations sorted in ascending order (each 
+//citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.
+//According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h 
+//citations each, and the other N − h papers have no more than h citations each."
+
+//二分法
+class Solution {
+public:
+    int hIndex(vector<int>& citations) {
+        int size = citations.size();
+        int lo = 0;
+        int hi = size;//初始条件设置为size而不是size-1来解决边界条件，精髓
+        int mid=(lo+hi)/2;
+
+        while(lo < hi){
+            if(citations[mid] >= size-mid)hi = mid;
+            else lo = mid+1;
+            mid = (lo+hi)/2;
+        }
+        return size-lo;
+    }
+};
