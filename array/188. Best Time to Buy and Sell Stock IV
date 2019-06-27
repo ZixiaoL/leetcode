@@ -1,0 +1,69 @@
+//Say you have an array for which the ith element is the price of a given stock on day i.
+//Design an algorithm to find the maximum profit. You may complete at most k transactions.
+//Note:
+//You may not engage in multiple transactions at the same time (ie, you must sell the stock before you buy again).
+
+//Inspired by III
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        if (k>prices.size()/2){ // simple case
+            int ans = 0;
+            for (int i=1; i<prices.size(); ++i){
+                ans += max(prices[i] - prices[i-1],0);
+            }
+            return ans;
+        }
+        if(k == 0)return 0;
+        vector<int> profit(k, 0);
+        vector<int> cost(k, INT_MAX);
+        for(int i = 0; i < prices.size(); i++){
+            cost[0] = min(cost[0], prices[i]);
+            profit[0] = max(profit[0], prices[i]-cost[0]);
+            for(int j = 1; j < k; j++){
+                cost[j] = min(cost[j], prices[i]-profit[j-1]);
+                profit[j] = max(profit[j], prices[i]-cost[j]);
+            }
+        }
+        return profit[k-1];
+    }
+};
+
+//Using Max Heap and Stack很厉害的感觉
+class Solution {
+public:
+    int maxProfit(int k, vector<int> &prices) {
+        int n = (int)prices.size(), ret = 0, v, p = 0;
+        priority_queue<int> profits;
+        stack<pair<int, int> > vp_pairs;
+        while (p < n) {
+            // find next valley/peak pair
+            for (v = p; v < n - 1 && prices[v] >= prices[v+1]; v++);
+            for (p = v + 1; p < n && prices[p] >= prices[p-1]; p++);
+            // save profit of 1 transaction at last v/p pair, if current v is lower than last v
+            while (!vp_pairs.empty() && prices[v] < prices[vp_pairs.top().first]) {
+                profits.push(prices[vp_pairs.top().second-1] - prices[vp_pairs.top().first]);
+                vp_pairs.pop();
+            }
+            // save profit difference between 1 transaction (last v and current p) and 2 transactions (last v/p + current v/p),
+            // if current v is higher than last v and current p is higher than last p
+            while (!vp_pairs.empty() && prices[p-1] >= prices[vp_pairs.top().second-1]) {
+                profits.push(prices[vp_pairs.top().second-1] - prices[v]);
+                v = vp_pairs.top().first;
+                vp_pairs.pop();
+            }
+            vp_pairs.push(pair<int, int>(v, p));
+        }
+        // save profits of the rest v/p pairs
+        while (!vp_pairs.empty()) {
+            profits.push(prices[vp_pairs.top().second-1] - prices[vp_pairs.top().first]);
+            vp_pairs.pop();
+        }
+        // sum up first k highest profits
+        for (int i = 0; i < k && !profits.empty(); i++) {
+            ret += profits.top();
+            profits.pop();
+        }
+        return ret;
+    }
+};
