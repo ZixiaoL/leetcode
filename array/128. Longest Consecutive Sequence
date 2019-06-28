@@ -1,0 +1,43 @@
+//Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+//Your algorithm should run in O(n) complexity.
+
+//两种unordered_set做法，一种取每个序列首，一种取中间然后把整个序列删掉
+class Solution {
+public:
+    int longestConsecutive(vector<int> &num) {
+        if(num.size() == 0)return 0;
+        unordered_set<int> record(num.begin(),num.end());
+        int res = 1;
+        for(int n : num){
+            if(record.find(n-1)==record.end()) {
+                int curnum = n;
+                int cres = 1;
+            while(record.find(curnum+1)!=record.end()) {
+                curnum += 1;
+                cres += 1;
+            }
+                
+            res = max(res,cres);
+            }
+        }
+        return res;
+    }
+};
+
+class Solution {
+public:
+    int longestConsecutive(vector<int> &num) {
+        if(num.size() == 0)return 0;
+        unordered_set<int> record(num.begin(),num.end());
+        int res = 1;
+        for(int n : num){
+            if(record.find(n)==record.end()) continue;
+            record.erase(n);
+            int prev = n-1,next = n+1;
+            while(record.find(prev)!=record.end()) record.erase(prev--);
+            while(record.find(next)!=record.end()) record.erase(next++);
+            res = max(res,next-prev-1);
+        }
+        return res;
+    }
+};
