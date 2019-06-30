@@ -1,0 +1,25 @@
+//Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), 
+//prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+//Approach #3 Floyd's Tortoise and Hare (Cycle Detection) [Accepted]
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        // Find the intersection point of the two runners.有循环的话快的一定会再次超过慢的
+        int tortoise = nums[0];
+        int hare = nums[0];
+        do {
+            tortoise = nums[tortoise];
+            hare = nums[nums[hare]];
+        } while (tortoise != hare);
+        // Find the "entrance" to the cycle.开头走到龟时龟会走到兔，一直走直到找到值相同的那个索引
+        int ptr1 = nums[0];
+        int ptr2 = tortoise;
+        while (ptr1 != ptr2) {
+            ptr1 = nums[ptr1];
+            ptr2 = nums[ptr2];
+        }
+
+        return ptr1;
+    }
+};
