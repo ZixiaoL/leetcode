@@ -1,0 +1,19 @@
+//Given a sorted positive integer array nums and an integer n, add/patch elements to the array such that any number in range [1, n] 
+//inclusive can be formed by the sum of some elements in the array. Return the minimum number of patches required.
+
+//既然0-miss都有了，那么取到下一个（没用过的）i对应的数时，0-miss+nums[i]也会都有
+class Solution {
+public:
+    int minPatches(vector<int>& nums, int n) {
+    long miss = 1, added = 0, i = 0;
+    while (miss <= n) {
+        if (i < nums.size() && nums[i] <= miss) {
+            miss += nums[i++];
+        } else {
+            miss += miss;
+            added++;
+        }
+    }
+    return added;
+    }
+};
