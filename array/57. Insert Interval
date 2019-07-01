@@ -1,0 +1,88 @@
+//Given a set of non-overlapping intervals, insert a new interval into the intervals (merge if necessary).
+//You may assume that the intervals were initially sorted according to their start times.
+
+//自己用的死方法，击败0.02的对手
+class Solution {
+public:
+    void remove(vector<vector<int>>& intervals,int droplo,int drophi,int newmin,int newmax){
+        for(int i = droplo; i <= drophi; i++){
+            intervals.erase(intervals.begin()+droplo);
+        }
+        intervals.insert(intervals.begin()+droplo,{newmin,newmax});
+    }
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        if(intervals.size() == 0){intervals.push_back(newInterval);return intervals;}
+        int newmin = newInterval[0];
+        int newmax = newInterval[1];
+        //边界条件
+        if(newmin > intervals[intervals.size()-1][1]){intervals.push_back(newInterval);return intervals;}
+        if(newmax < intervals[0][0]){intervals.insert(intervals.begin(),newInterval);return intervals;}
+        int droplo = 0;
+        int drophi = intervals.size()-1;
+        int cur = -1;
+        //找到要删的地方
+        for (auto&& num : intervals){
+            cur++;
+            if(newmin >= num[0])droplo = cur;
+            if(newmax <= num[1]){drophi = cur;break;}
+        }
+        //分类讨论
+        if(droplo != drophi){
+            if(intervals[droplo][1] < newmin && intervals[drophi][0] > newmax)
+                remove(intervals,droplo+1,drophi-1,min(newmin,intervals[droplo+1][0]),max(newmax,intervals[drophi-1][1]));
+            else if(intervals[droplo][1] >= newmin && intervals[drophi][0] > newmax)
+                remove(intervals,droplo,drophi-1,min(newmin,intervals[droplo][0]),max(newmax,intervals[drophi-1][1]));
+            else if(intervals[droplo][1] < newmin && intervals[drophi][0] <= newmax)
+                remove(intervals,droplo+1,drophi,min(newmin,intervals[droplo+1][0]),max(newmax,intervals[drophi][1]));
+            else
+                remove(intervals,droplo,drophi,min(newmin,intervals[droplo][0]),max(newmax,intervals[drophi][1]));
+        }
+        else {
+            intervals[droplo][0] = min(newmin,intervals[droplo][0]);
+            intervals[droplo][1] = max(newmax,intervals[droplo][1]);
+        }
+        return intervals;
+    }
+};
+
+//using "equal_range" to find overlapped intervals.
+class Solution {
+public:
+    vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+        auto compare = [] (const Interval &intv1, const Interval &intv2)
+                          { return intv1.end < intv2.start; };
+        auto range = equal_range(intervals.begin(), intervals.end(), newInterval, compare);
+        auto itr1 = range.first, itr2 = range.second;
+        if (itr1 == itr2) {
+            intervals.insert(itr1, newInterval);
+        } else {
+            itr2--;
+            itr2->start = min(newInterval.start, itr1->start);
+            itr2->end = max(newInterval.end, itr2->end);
+            intervals.erase(itr1, itr2);
+        }
+        return intervals;
+    }
+};
+
+//另一个更实用的
+class Solution {
+public:
+    vector<Interval> insert(vector<Interval>& intervals, Interval newInterval) {
+        vector<Interval> res;
+        int index = 0;
+        while(index < intervals.size() && intervals[index].end < newInterval.start){
+            res.push_back(intervals[index++]);
+        }
+        while(index < intervals.size() && intervals[index].start <= newInterval.end){
+            newInterval.start = min(newInterval.start, intervals[index].start);
+            newInterval.end = max(newInterval.end, intervals[index].end);
+            index++;
+        }
+        res.push_back(newInterval);
+        while(index < intervals.size()){
+            res.push_back(intervals[index++]);
+        }
+        return res;
+    }
+};
