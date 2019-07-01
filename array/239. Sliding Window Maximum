@@ -1,0 +1,59 @@
+//Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the very right. 
+//You can only see the k numbers in the window. 
+//Each time the sliding window moves right by one position. Return the max sliding window.
+
+//蛮力,击败百分之八。。
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        if(nums.size() == 0)return {};
+        vector<int> res;
+        int imax = 0;
+        int nmax = INT_MIN;
+        int i = k;
+        while(i <= nums.size()){
+            nmax = INT_MIN;
+            for(int j = i-k; j < i; j++){
+                nmax = max(nmax,nums[j]);
+            }
+            res.push_back(nmax);
+            i++;
+        }
+        return res;
+    }
+};
+
+//Monotonic Queue
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> dq;
+        vector<int> ans;
+        for (int i=0; i<nums.size(); i++) {
+            if (!dq.empty() && dq.front() == i-k) dq.pop_front();
+            while (!dq.empty() && nums[dq.back()] < nums[i])
+                dq.pop_back();
+            dq.push_back(i);
+            if (i>=k-1) ans.push_back(nums[dq.front()]);
+        }
+        return ans;
+    }
+};
+
+//Priority-queue
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        vector<int> result;
+        /*** use the multiset to get the max-value ***/
+        multiset<int> w;
+        for(int i=0; i<nums.size(); i++){
+            /*** erase the previous top element ***/
+            if(i>=k)  w.erase(w.find(nums[i-k]));
+            w.insert(nums[i]);
+            /*** insert the max-value of the window ***/
+            if(i>=k-1) result.push_back(*w.rbegin());
+        }
+        return result;
+    }
+};
