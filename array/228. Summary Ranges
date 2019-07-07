@@ -1,0 +1,29 @@
+//Given a sorted integer array without duplicates, return the summary of its ranges.
+
+//自写O(n)感觉其他人的差不多
+class Solution {
+public:
+    vector<string> summaryRanges(vector<int>& nums) {
+        vector<string> ans;
+        string cans = "";
+        bool flag = false;
+        for(int i = 0; i < nums.size(); i++){
+            cans += to_string(nums[i]); 
+            while(i < nums.size()-1 && nums[i+1] == nums[i]+1){
+                i++;
+                flag = true;
+            }
+            if(flag){
+                cans += "->";
+                cans += to_string(nums[i]);
+                ans.push_back(cans);
+                }
+            else{
+                ans.push_back(cans);
+            }
+            cans = "";
+            flag = false;
+        }
+        return ans;
+    }
+};
