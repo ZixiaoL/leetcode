@@ -1,0 +1,108 @@
+//
+
+//sort
+void wiggleSort(vector<int>& nums) {
+    vector<int> sorted(nums);
+    sort(sorted.begin(), sorted.end());
+    for (int i=nums.size()-1, j=0, k=i/2+1; i>=0; i--)
+        nums[i] = sorted[i&1 ? k++ : j++];
+}
+
+class Solution {
+public:
+    void wiggleSort(vector<int>& nums) {
+        int n = nums.size();
+        int mid = n/2;
+        nth_element(nums.begin(), nums.begin() + mid, nums.end());
+        threeWayPartition(nums, nums[mid]);
+        vector<int> res(n);
+        int largeStart = n-1;
+        int smallStart = (n%2) ? mid : (mid-1);
+        for (int i = 0; i < n; i+=2)
+            res[i] = nums[smallStart--];
+        for (int i = 1; i < n; i+=2)
+            res[i] = nums[largeStart--];
+        nums = res;
+    }
+    
+    // this ensures all values equal to the median is in the middle
+    void threeWayPartition(vector<int> &nums, int val) {
+        int i = 0, j = 0;
+        int n = nums.size()-1;
+        while (j <= n){
+            if (nums[j] < val)
+                swap(nums[i++], nums[j++]);
+            else if (nums[j] > val)
+                swap(nums[j], nums[n--]);
+            else
+                j++;
+        }
+    }
+};
+
+class Solution {
+public:
+    int mid;
+    int size;
+    void wiggleSort(vector<int>& nums) {
+        size = nums.size(); mid = (size-1)/2;
+        if(size < 2) return;
+
+        int m = 0, i = 0, j = size-1, median = quickSelect(nums, mid);
+
+        while(m <= j) {
+            int m_ = virtualIndex(m), i_ = virtualIndex(i), j_ = virtualIndex(j); // Virtual index mapping, so m_, i_, and j_ are actual indices
+            if(nums[m_] < median) {
+                swap(nums[i_], nums[m_]);
+                ++i; ++m; // Algorithm runs in virtual index, so we work with the virtual index iterators.
+            }
+            else if(nums[m_] > median) {
+                swap(nums[m_], nums[j_]);
+                --j; // Algorithm runs in virtual index, so we work with the virtual index iterators.
+            }
+            else ++m; // Algorithm runs in virtual index, so we work with the virtual index iterators.
+        }
+    }
+    
+    inline int virtualIndex(int i) {
+        if(i <= mid) return (mid-i)*2;
+        return 1 + 2*(size - i - 1);
+    }
+
+private:
+    void partition(vector<int>& tmp, int det, int left, int right, int& i, int& j) {
+        int mid = i = left; j = right;
+        while(mid <= j) {
+            if(tmp[mid] < det) swap(tmp[i++], tmp[mid++]);
+            else if(tmp[mid] > det) swap(tmp[mid], tmp[j--]); 
+            else ++mid;
+        }
+        --i; ++j;
+    }
+
+    int qs(vector<int>& tmp, int pos, int i, int j) { // left & right inclusive.
+        if(i == j) return tmp[i];
+        if(j - i == 1) {
+            if(tmp[i] > tmp[j]) swap(tmp[i], tmp[j]);
+            if(pos == i) return tmp[i];
+            return tmp[j];
+        }
+
+        int m = i + (j-i)/2, boundLeft, boundRight;
+        if(tmp[i] > tmp[m]) swap(tmp[i], tmp[m]);
+        if(tmp[m] > tmp[j]) swap(tmp[m], tmp[j]);
+        if(tmp[i] > tmp[m]) swap(tmp[i], tmp[m]);
+        partition(tmp, tmp[m], i, j, boundLeft, boundRight);
+        if(pos > boundLeft) {
+            if(pos >= boundRight) return qs(tmp, pos, boundRight, j);
+            return tmp[pos];
+        }
+        return qs(tmp, pos, i, boundLeft);
+    }
+
+    int quickSelect(vector<int>& tmp, int pos) { // 0 indexing for pos
+        return qs(tmp, pos, 0, tmp.size()-1);
+    }
+};
+
+auto gucciGang = []() {std::ios::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr);return 0;}();
