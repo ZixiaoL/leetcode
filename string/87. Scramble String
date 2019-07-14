@@ -58,3 +58,6 @@ public:
         return false;
     }
 };
+
+//https://leetcode.com/problems/scramble-string/discuss/29394/My-C%2B%2B-solutions-(recursion-with-cache-DP-recursion-with-cache-and-pruning)-with-explanation-(4ms)
+//DP解法以后看吧
