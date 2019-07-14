@@ -1,0 +1,124 @@
+//Given an array of strings, group anagrams together.
+
+//自写蛮力
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if(s.size() != t.size())return false;
+        unordered_map<char,int> m;
+        for(int i = 0; i < s.size(); i++){
+            if(m.find(s[i]) != m.end())m[s[i]]++;
+            else m[s[i]] = 1;
+        }
+        for(int i = 0; i < t.size(); i++){
+            if(m.find(t[i]) == m.end())return false;
+            else if(m[t[i]] != 0)m[t[i]]--;
+            else return false;
+        }        
+        return true;
+    }    
+    
+    
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        vector<vector<string>> ans;
+        vector<string> temp;
+        for(int i = 0; i < strs.size(); i++){
+            temp = {};
+            temp.push_back(strs[i]);
+            for(int j = i+1; j < strs.size(); j++){
+                if(isAnagram(strs[i],strs[j])){
+                    temp.push_back(strs[j]);
+                    strs.erase(strs.begin()+j);
+                    j--;
+                }                
+            }
+            ans.push_back(temp);
+        }
+        return ans;
+    }
+};
+
+//Approach 1: Categorize by Sorted String
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        if (strs.length == 0) return new ArrayList();
+        Map<String, List> ans = new HashMap<String, List>();
+        for (String s : strs) {
+            char[] ca = s.toCharArray();
+            Arrays.sort(ca);
+            String key = String.valueOf(ca);
+            if (!ans.containsKey(key)) ans.put(key, new ArrayList());
+            ans.get(key).add(s);
+        }
+        return new ArrayList(ans.values());
+    }
+}
+
+//Approach 2: Categorize by Count
+class Solution {
+    public List<List<String>> groupAnagrams(String[] strs) {
+        if (strs.length == 0) return new ArrayList();
+        Map<String, List> ans = new HashMap<String, List>();
+        int[] count = new int[26];
+        for (String s : strs) {
+            Arrays.fill(count, 0);
+            for (char c : s.toCharArray()) count[c - 'a']++;
+
+            StringBuilder sb = new StringBuilder("");
+            for (int i = 0; i < 26; i++) {
+                sb.append('#');
+                sb.append(count[i]);
+            }
+            String key = sb.toString();
+            if (!ans.containsKey(key)) ans.put(key, new ArrayList());
+            ans.get(key).add(s);
+        }
+        return new ArrayList(ans.values());
+    }
+}
+
+//
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> mp;
+        for (string s : strs) {
+            string t = s; 
+            sort(t.begin(), t.end());
+            mp[t].push_back(s);
+        }
+        vector<vector<string>> anagrams;
+        for (auto p : mp) { 
+            anagrams.push_back(p.second);
+        }
+        return anagrams;
+    }
+};
+
+//
+class Solution {
+public:
+    vector<vector<string>> groupAnagrams(vector<string>& strs) {
+        unordered_map<string, vector<string>> mp;
+        for (string s : strs) {
+            mp[strSort(s)].push_back(s);
+        }
+        vector<vector<string>> anagrams;
+        for (auto p : mp) { 
+            anagrams.push_back(p.second);
+        }
+        return anagrams;
+    }
+private:
+    string strSort(string s) {
+        int counter[26] = {0};
+        for (char c : s) {
+            counter[c - 'a']++;
+        }
+        string t;
+        for (int c = 0; c < 26; c++) {
+            t += string(counter[c], c + 'a');
+        }
+        return t;
+    }
+};
