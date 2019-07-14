@@ -1,0 +1,31 @@
+//Given a pattern and a string str, find if str follows the same pattern.
+//Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in str.
+
+//自写
+class Solution {
+public:
+    bool wordPattern(string pattern, string str) {
+        if(pattern.size() == 0)return (str.size() == 0)? true:false;
+        unordered_map<char,string> m1;
+        unordered_map<string,char> m2;
+        int i = 0, j = 0;
+        string temp = "";
+        while(i < str.size()){
+            temp = "";
+            
+            while(i < str.size() && str[i] == ' ')i++;
+            while(i < str.size() && str[i] != ' ')temp += str[i++];
+            
+            if(temp != "" && m1.find(pattern[j]) == m1.end())m1[pattern[j]] = temp;           
+            else if(temp != "" && m1[pattern[j]] != temp)return false;
+            
+            if(temp != "" && m2.find(temp) == m2.end())m2[temp] = pattern[j];
+            else if(temp != "" && m2[temp] != pattern[j])return false;     
+            
+            j++;
+        }
+        if(j < pattern.size())return false;
+        return true;        
+    }
+};
+
