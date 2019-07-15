@@ -1,0 +1,30 @@
+//Given a 32-bit signed integer, reverse digits of an integer.
+
+//Approach 1: Pop and Push Digits & Check before Overflow
+class Solution {
+public:
+    int reverse(int x) {
+        int rev = 0;
+        while (x != 0) {
+            int pop = x % 10;
+            x /= 10;
+            if (rev > INT_MAX/10 || (rev == INT_MAX / 10 && pop > 7)) return 0;
+            if (rev < INT_MIN/10 || (rev == INT_MIN / 10 && pop < -8)) return 0;
+            rev = rev * 10 + pop;
+        }
+        return rev;
+    }
+};
+
+//longlong
+class Solution {
+public:
+    int reverse(int x) {
+        long long res = 0;
+        while(x) {
+            res = res*10 + x%10;
+            x /= 10;
+        }
+        return (res<INT_MIN || res>INT_MAX) ? 0 : res;
+    }
+};
