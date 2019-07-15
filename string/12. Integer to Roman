@@ -1,0 +1,107 @@
+Roman numerals are represented by seven different symbols: I, V, X, L, C, D and M.
+Symbol       Value
+I             1
+V             5
+X             10
+L             50
+C             100
+D             500
+M             1000
+For example, two is written as II in Roman numeral, just two one's added together. Twelve is written as, XII, which is simply X + II. The number twenty seven is written as XXVII, which is XX + V + II.
+Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not IIII. Instead, the number four is written as IV. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as IX. There are six instances where subtraction is used:
+I can be placed before V (5) and X (10) to make 4 and 9. 
+X can be placed before L (50) and C (100) to make 40 and 90. 
+C can be placed before D (500) and M (1000) to make 400 and 900.
+Given an integer, convert it to a roman numeral. Input is guaranteed to be within the range from 1 to 3999.
+
+//
+class Solution {
+public:
+    string intToRoman(int num) {
+        string aResult = "";
+        int aNum = num;
+        while (aNum >= 1000) {
+            aNum -= 1000;
+            aResult += "M";
+        }
+        if (aNum >= 900) {
+            aNum -= 900;
+            aResult += "CM";
+        }
+        while (aNum >= 500) {
+            aNum -= 500;
+            aResult += "D";
+        }
+        while (aNum >= 400) {
+            aNum -= 400;
+            aResult += "CD";
+        }
+        while (aNum >= 100) {
+            aNum -= 100;
+            aResult += "C";
+        }
+        while (aNum >= 90) {
+            aNum -= 90;
+            aResult += "XC";
+        }
+        while (aNum >= 50) {
+            aNum -= 50;
+            aResult += "L";
+        }
+        while (aNum >= 40) {
+            aNum -= 40;
+            aResult += "XL";
+        }
+        while (aNum >= 10) {
+            aNum -= 10;
+            aResult += "X";
+        }
+        while (aNum >= 9) {
+            aNum -= 9;
+            aResult += "IX";
+        }
+        while (aNum >= 5) {
+            aNum -= 5;
+            aResult += "V";
+        }
+        while (aNum >= 4) {
+            aNum -= 4;
+            aResult += "IV";
+        }
+        while (aNum >= 1) {
+            aNum -= 1;
+            aResult += "I";
+        }   
+        return aResult;
+    }
+};
+
+//
+public static String intToRoman(int num) {
+    String M[] = {"", "M", "MM", "MMM"};
+    String C[] = {"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"};
+    String X[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
+    String I[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
+    return M[num/1000] + C[(num%1000)/100] + X[(num%100)/10] + I[num%10];
+}
+
+//
+public static String intToRoman(int num){
+	if (num < 1 || num > 3999) return "";
+	
+	StringBuilder result = new StringBuilder();
+	
+	String[] roman = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+	int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
+	
+	int i = 0;
+            //iterate until the number becomes zero, NO NEED to go until the last element in roman array
+	while (num >0) {
+		while ( num >= values[i]) {
+			num -= values[i];
+			result.append(roman[i]);
+		}
+		i++;
+	}
+	return result.toString();
+}
