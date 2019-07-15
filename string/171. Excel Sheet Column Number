@@ -1,0 +1,32 @@
+//
+Given a column title as appear in an Excel sheet, return its corresponding column number.
+For example:
+    A -> 1
+    B -> 2
+    C -> 3
+    ...
+    Z -> 26
+    AA -> 27
+    AB -> 28 
+    ...
+//
+class Solution {
+public:
+    int titleToNumber(string s) {
+        int i = 0;
+        int ans = 0;
+        while(i < s.size()){
+            ans *= 26;
+            ans += s[i]-'A'+1;
+            i++;
+        }
+        return ans;
+    }
+};
+
+//one-line
+return s != "" ? 26*titleToNumber(s.substr(0,s.size()-1)) + s[s.size()-1] -'A'+1 : 0;
+
+int result = 0;
+for (int i = 0; i < s.size(); result = result * 26 + (s.at(i) - 'A' + 1), i++);
+return result;
