@@ -1,0 +1,95 @@
+Given an array of words and a width maxWidth, format the text such that each line has exactly maxWidth characters and is fully (left and right) justified.
+You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces ' ' when necessary so that each line has exactly maxWidth characters.
+Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line do not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
+For the last line of text, it should be left justified and no extra space is inserted between words.
+Note:
+A word is defined as a character sequence consisting of non-space characters only.
+Each word's length is guaranteed to be greater than 0 and not exceed maxWidth.
+The input array words contains at least one word.
+
+//自写
+class Solution {
+public:
+    vector<string> fullJustify(vector<string>& words, int maxWidth) {
+        string l;
+        vector<string> ans;
+        int len = 0;
+        int cnumw = 0;
+        int numw = 0;
+        int numb = 0;
+        int numeb = 0;
+        for(auto &a : words){
+            if(len != 0 && len+a.size()+1 > maxWidth){
+                if(cnumw == 1){
+                    l += words[numw];
+                    for(int j = words[numw].size(); j < maxWidth; j++){
+                        l += ' ';
+                    }
+                }
+                else{
+                    numb = (maxWidth-len)/(cnumw-1);
+                    numeb = maxWidth-len-numb*(cnumw-1);
+                    for(int i = numw; i < numw+cnumw; i++){
+                        if(i == numw+cnumw-1)l += words[i];
+                        else if(i < numw+numeb){
+                            l += words[i];
+                            for(int j = 0; j < numb+2; j++){
+                                l += ' ';
+                            }
+                        }
+                        else{
+                            l += words[i];
+                            for(int j = 0; j < numb+1; j++){
+                                l += ' ';
+                            }
+                        }
+                    }
+                }
+                ans.push_back(l);
+                l = "";
+                len = 0;
+                numw += cnumw;
+                cnumw = 0;
+            }
+            if(len == 0){
+                len += a.size();
+                cnumw++;
+            }
+            else{
+                len += a.size()+1;
+                cnumw++;
+            }
+        }
+        for(int i = numw; i < words.size(); i++){
+            l += words[i];
+            if(i != words.size()-1)l += ' '; 
+        }
+        for(int j = 0; j < maxWidth-len; j++){
+            l += ' ';
+        }
+        ans.push_back(l);
+        return ans;
+    }
+};
+
+//
+class Solution {
+public:
+vector<string> fullJustify(vector<string> &words, int L) {
+    vector<string> res;
+    for(int i = 0, k, l; i < words.size(); i += k) {
+        for(k = l = 0; i + k < words.size() and l + words[i+k].size() <= L - k; k++) {
+            l += words[i+k].size();
+        }
+        string tmp = words[i];
+        for(int j = 0; j < k - 1; j++) {
+            if(i + k >= words.size()) tmp += " ";
+            else tmp += string((L - l) / (k - 1) + (j < (L - l) % (k - 1)), ' ');
+            tmp += words[i+j+1];
+        }
+        tmp += string(L - tmp.size(), ' ');
+        res.push_back(tmp);
+    }
+    return res;
+}
+};
