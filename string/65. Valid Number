@@ -1,0 +1,63 @@
+Validate if a given string can be interpreted as a decimal number.
+Some examples:
+"0" => true
+" 0.1 " => true
+"abc" => false
+"1 a" => false
+"2e10" => true
+" -90e3   " => true
+" 1e" => false
+"e3" => false
+" 6e-1" => true
+" 99e2.5 " => false
+"53.5e93" => true
+" --6 " => false
+"-+3" => false
+"95a54e53" => false
+Note: It is intended for the problem statement to be ambiguous. You should gather all requirements up front before implementing one. However, here is a list of characters that can be in a valid decimal number:
+Numbers 0-9
+Exponent - "e"
+Positive/negative sign - "+"/"-"
+Decimal point - "."
+Of course, the context of these characters also matters in the input.
+
+//自写
+class Solution {
+public:
+    bool isNumber(string s) {
+        int i = 0;
+        //去除前后空格
+        while(s[0] == ' ')s.erase(0,1);
+        while(s[s.size()-1] == ' ')s.erase(s.size()-1,1);
+        //开头情况
+        if((s[0]-'0' < 0 || s[0]-'0'> 9) && s[0] != '+' && s[0] != '-' && s[0] != '.')return false;
+        if(s[0] == '.' && (s.size() == 1 || (s[1]-'0' < 0 || s[1]-'0'> 9)))return false;
+        if((s[0] == '+' || s[0] == '-') && (s.size() == 1 || ((s[1]-'0' < 0 || s[1]-'0'> 9) && s[1] != '.')))return false;
+        if((s[0] == '+' || s[0] == '-') && s[1] == '.'){
+            if(s.size() == 2)return false;
+            if((s[2]-'0' < 0 || s[2]-'0'> 9))return false;
+            i++;
+        }
+        //e之前情况
+        bool d = (s[i] == '.')? true : false;
+        for(i++; i < s.size() && s[i] != 'e'; i++){
+            if(s[i]-'0' < 0 || s[i]-'0'> 9){
+                if(s[i] != '.')return false;
+                else if(d)return false;
+                else d = true;
+            }
+        }
+        if(i == s.size())return true;
+        //e之后情况
+        i++;
+        if(i == s.size())return false;
+        if((s[i]-'0' < 0 || s[i]-'0'> 9) && s[i] != '+' && s[i] != '-')return false;
+        if((s[i] == '+' || s[i] == '-') && (s.size() == i+1 || (s[i+1]-'0' < 0 || s[i+1]-'0'> 9)))return false;
+        for(i++; i < s.size(); i++){
+             if(s[i]-'0' < 0 || s[i]-'0'> 9)return false;
+        }
+        return true;
+    }
+};
+
+//其他解法看这里的https://leetcode.wang/leetCode-65-Valid-Number.html
