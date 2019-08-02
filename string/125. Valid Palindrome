@@ -1,0 +1,32 @@
+//Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+//Note: For the purpose of this problem, we define empty string as valid palindrome.
+
+
+//自写
+class Solution {
+public:
+bool isPalindrome(string s) {
+	for (int i = 0; i < s.size(); i++) {
+		if (s[i] - 'A' >= 0 && s[i] - 'A' < 26)s[i] += 'a' - 'A';
+		else if (!isalnum(s[i])) s.erase(i--, 1);
+	}
+	string c = s;
+	reverse(c.begin(), c.end());
+	if (s == c)return true;
+	return false;
+}
+};
+
+//2 pointers
+class Solution {
+public:
+bool isPalindrome(string s) {
+    for (int i = 0, j = s.size() - 1; i < j; i++, j--) { // Move 2 pointers from each end until they collide
+        while (isalnum(s[i]) == false && i < j) i++; // Increment left pointer if not alphanumeric
+        while (isalnum(s[j]) == false && i < j) j--; // Decrement right pointer if no alphanumeric
+        if (toupper(s[i]) != toupper(s[j])) return false; // Exit and return error if not match
+    }
+    
+    return true;
+}
+};
