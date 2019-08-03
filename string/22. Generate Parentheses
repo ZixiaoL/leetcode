@@ -1,0 +1,91 @@
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses. 
+For example, given n = 3, a solution set is: 
+[
+  "((()))",
+  "(()())",
+  "(())()",
+  "()(())",
+  "()()()"
+]
+
+//Approach 1: Brute Force产生所有情况再检验是否合格
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> combinations = new ArrayList();
+        generateAll(new char[2 * n], 0, combinations);
+        return combinations;
+    }
+
+    public void generateAll(char[] current, int pos, List<String> result) {
+        if (pos == current.length) {
+            if (valid(current))
+                result.add(new String(current));
+        } else {
+            current[pos] = '(';
+            generateAll(current, pos+1, result);
+            current[pos] = ')';
+            generateAll(current, pos+1, result);
+        }
+    }
+
+    public boolean valid(char[] current) {
+        int balance = 0;
+        for (char c: current) {
+            if (c == '(') balance++;
+            else balance--;
+            if (balance < 0) return false;
+        }
+        return (balance == 0);
+    }
+}
+
+def generateParenthesis(self, N):
+    if N == 0: return ['']
+    ans = []
+    for c in xrange(N):
+        for left in self.generateParenthesis(c):
+            for right in self.generateParenthesis(N-1-c):
+                ans.append('({}){}'.format(left, right))
+    return ans
+
+//Approach 2: Backtracking
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        vector<string> ret;
+        helper(ret, "", n, 0, 0);
+        return ret;
+    }
+private:
+    void helper(vector<string>& ret, string curr, int n, int left, int right) {
+        if (left == right && left == n) {
+            ret.push_back(curr);
+            return;
+        }
+        
+        if (left == right) {
+            helper(ret, curr+"(", n, left+1, right);
+        } else if (left > right && left == n) {
+            helper(ret, curr+")", n, left, right+1);
+        } else if (left > right && left < n) {
+            helper(ret, curr+"(", n, left+1, right);
+            helper(ret, curr+")", n, left, right+1);
+        }
+    }
+};
+
+//Approach 3: Closure Number
+class Solution {
+    public List<String> generateParenthesis(int n) {
+        List<String> ans = new ArrayList();
+        if (n == 0) {
+            ans.add("");
+        } else {
+            for (int c = 0; c < n; ++c)
+                for (String left: generateParenthesis(c))
+                    for (String right: generateParenthesis(n-1-c))
+                        ans.add("(" + left + ")" + right);
+        }
+        return ans;
+    }
+}
