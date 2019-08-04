@@ -1,0 +1,46 @@
+//Given a string of numbers and operators, return all possible results 
+//from computing all the different possible ways to group numbers and operators. The valid operators are +, - and *.
+
+//自写divide and conquer
+class Solution {
+public:
+    vector<int> diffWaysToCompute(string input) {  
+        vector<int> ans;
+        if(input.size() == 0)return ans;
+        int c;     
+        for(int i = 0; i < input.size()-1; i++){
+            while(i < input.size()-1 && input[i] != '+' && input[i] != '-' && input[i] != '*')i++;
+            if(input[i] == '+'){
+                for(auto &a : diffWaysToCompute(input.substr(0, i))){
+                    for(auto & b : diffWaysToCompute(input.substr(i+1))){
+                        c = a+b;
+                        ans.push_back(c);
+                    }
+                }
+            }
+            if(input[i] == '-'){
+                for(auto &a : diffWaysToCompute(input.substr(0, i))){
+                    for(auto & b : diffWaysToCompute(input.substr(i+1))){
+                        c = a-b;
+                        ans.push_back(c);
+                    }
+                }
+            }
+            if(input[i] == '*'){
+                for(auto &a : diffWaysToCompute(input.substr(0, i))){
+                    for(auto & b : diffWaysToCompute(input.substr(i+1))){
+                        c = a*b;
+                        ans.push_back(c);
+                    }
+                }
+            }
+        }
+        if(ans.size() == 0){
+            c = atoi(input.c_str());
+            ans.push_back(c);
+        }
+        sort(ans.begin(),ans.end());
+        return ans;
+    }
+};
+//可以用到dp，因为有很多子问题
