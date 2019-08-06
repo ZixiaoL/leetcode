@@ -1,0 +1,72 @@
+Write an algorithm to determine if a number is "happy".
+A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+
+//自写Floyd's Cycle detection algorithm
+class Solution {
+public:
+    bool isHappy(int n) {
+        int f = helper(helper(n));
+        int s = helper(n);
+        while(f != s){
+            s = helper(s);
+            f = helper(helper(f));
+        }
+        return s == 1;
+    }
+    int helper(int n){
+        int ans = 0;
+        while(n){
+            ans += (n%10)*(n%10);
+            n /= 10;
+        }
+        return ans;
+    }
+};
+
+Brent's Cycle detection algorithm
+
+Brent's algorithm features a moving rabbit and a stationary, then teleporting, turtle. Both turtle and rabbit start at the top of the list. The rabbit takes one step per iteration. Every once in a while, we teleport the turtle to the rabbit's position, and let the rabbit continue moving. We start out waiting just 2 steps before teleportation, and we double that each time we move the turtle. If there is a loop, they will meet in the loop.
+
+The code is as follows. The time complexity is O(λ + μ)*. However you're doing less stepping than with Floyd's (in fact the upper bound for steps is the number you would do with Floyd's algorithm). According to Brent's research, his algorithm is 24-36% faster on average for implicit linked list algorithms.(However, it cost same time as the Floyd's in the OJ ;) )
+
+class Solution {
+public:
+    int next(int n)
+    {
+        int sum = 0;
+        
+        while(n != 0)
+        {
+            sum += pow(n % 10,2);
+            n = n / 10;
+        }
+        
+        return sum;
+    }
+
+public:
+    bool isHappy(int n) {
+        int slow = n;
+        int fast = next(n);
+        int cnt = 1;
+        int lim = 2;
+        
+        while(slow != fast)
+        {
+            if(cnt == lim)
+            {
+                cnt = 1;
+                lim = lim*2;
+                slow = fast;
+            }
+            else
+                cnt ++;
+        
+            fast = next(fast);
+        }
+        
+        return fast == 1 ;
+    }
+};
+
+https://leetcode.com/problems/happy-number/discuss/56918/All-you-need-to-know-about-testing-happy-number!
