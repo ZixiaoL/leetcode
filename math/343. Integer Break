@@ -1,0 +1,79 @@
+//Given a positive integer n, break it into the sum of at least two positive integers 
+//and maximize the product of those integers. Return the maximum product you can get.
+
+//自写recursive
+class Solution {
+public:
+    int integerBreak(int n) {
+        long ans = 1;
+        long count = 1;
+        int nmax = (n%2)? n/2+1:n/2;
+        for(int i = 1; i <= nmax; i++){
+            for(int j = 1; j <= i; j++){
+                count = i*j;                
+                if(n-i-j == 0)ans = max(ans, count);
+                helper(n-i-j, count, ans, i);
+            }
+        }
+        return ans;
+    }
+    void helper(int n, long &count, long &ans, int &nmax){
+        if(n == 1 || n == 0)ans = max(ans, count);
+        for(int i = 2; n >1 && i <= nmax; i++){
+            count *= i;
+            helper(n-i, count, ans, i);
+            count /= i;
+        }
+    }
+};
+
+//dp
+class Solution {
+public:
+    int integerBreak(int n) {
+        
+        if (n <= 2)
+            return 1;
+
+        vector<int> maxArr(n+1, 0);
+                    
+        /** For a number i: write i as a sum of integers, then take the product of those integers.
+        maxArr[i] = maximum of all the possible products */
+        
+        maxArr[1] = 0;
+        maxArr[2] = 1; // 2=1+1 so maxArr[2] = 1*1
+        
+        for (int i=3; i<=n; i++) {
+            for (int j=1; j<i; j++) {
+                /** Try to write i as: i = j + S where S=i-j corresponds to either one number or a sum of two or more numbers
+                
+                Assuming that j+S corresponds to the optimal solution for maxArr[i], we have two cases:
+                (1) i is the sum of two numbers, i.e. S=i-j is one number, and so maxArr[i]=j*(i-j)
+                (2) i is the sum of at least three numbers, i.e. S=i-j is a sum of at least 2 numbers,
+                and so the product of the numbers in this sum for S is maxArr[i-j]
+                (=maximum product after breaking up i-j into a sum of at least two integers):
+                maxArr[i] = j*maxArr[i-j]
+                */
+                maxArr[i] = max(maxArr[i], max(j*(i-j), j*maxArr[i-j]));
+            }
+        }
+        return maxArr[n];
+    }
+};
+
+//math
+For any integer p strictly greater than 4, it has the property such that 3 * (p - 3) > p, which means breaking it into two integers 3 and p - 3 makes the product larger while keeping the sum unchanged. If p - 3 is still greater than 4, we should break it again into 3 and p - 6, giving 3 * 3 * (p - 6), and so on, until we cannot break it (less than or equal to 4) anymore.
+
+For integer 4, breaking it into 2 * 2 or keeping it as 4 does not change its contribution to the product.
+We cannot have more than two 4s, because 2 * 3 * 3 > 4 * 4. We cannot have more than three 2s because 3 * 3 > 2 * 2 * 2.
+class Solution {
+public:
+    long long integerBreak(long long n) {
+        if(n == 2) return 1;
+        if(n == 3) return 2;
+        if(n == 4) return 4;
+        if(n == 5) return 6;
+        if(n == 6) return 9;
+        return 3 * integerBreak(n - 3);
+    }
+};
