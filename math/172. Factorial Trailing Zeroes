@@ -1,0 +1,27 @@
+//Given an integer n, return the number of trailing zeroes in n!.
+
+
+//自写，就是看有多少个5，然后有多少个25，125。。。
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        int ans = 0;
+        while(n){
+            ans += n/5;
+            n /= 5;
+        }
+        return ans;
+    }
+};
+//注意调换循环内语句次序可以更快
+class Solution {
+public:
+    int trailingZeroes(int n) {
+        int ans = 0;
+        while(n){
+            n /= 5;
+            ans += n;
+        }
+        return ans;
+    }
+};
