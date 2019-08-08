@@ -1,0 +1,26 @@
+Given a positive integer n and you can do operations as follow: 
+
+If n is even, replace n with n/2.
+If n is odd, you can replace n with either n + 1 or n - 1.
+
+What is the minimum number of replacements needed for n to become 1? 
+
+//自写递归
+class Solution {
+public:
+    int integerReplacement(int n) {
+        if(n == INT_MAX)return 32;
+        int ans = INT_MAX;
+        int c = 0;
+        helper(n, c, ans);
+        return ans;
+    }
+    void helper(int n, int c, int &ans){
+        if(n == 1)ans = min(ans, c);
+        if(n % 2 == 0)helper(n/2, c+1, ans);
+        else if(c < ans){
+            helper(n+1, c+1, ans);
+            helper(n-1, c+1, ans);
+        }
+    }
+};
