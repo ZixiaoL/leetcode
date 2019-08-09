@@ -1,0 +1,85 @@
+//Given a binary tree, return the preorder traversal of its nodes' values.
+
+//自写递归
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        if(root == NULL)return ans;
+        helper(root, ans);
+        return ans;
+    }
+    void helper(TreeNode* root, vector<int> &ans){
+        ans.push_back(root->val);
+        if(root->left != NULL)helper(root->left, ans);
+        if(root->right != NULL)helper(root->right, ans);
+    }
+};
+
+//自写遍历0ms
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        stack<TreeNode*> s;
+        bool sign = true;
+        if(root == NULL)return ans;
+        ans.push_back(root->val);
+        s.push(root);
+        while(!s.empty()){
+            if(sign){
+                while(root->left != NULL){
+                    root = root->left;
+                    ans.push_back(root->val);
+                    s.push(root);
+                }
+            }
+            s.pop();            
+            if(root->right != NULL){
+                sign = true;
+                root = root->right;
+                ans.push_back(root->val);
+                s.push(root);                
+            }
+            else{
+                root = s.empty()? NULL:s.top();
+                sign = false;
+            }
+        }
+        return ans;
+    }
+};
+
+//这种方法明显更好
+	public List<Integer> preorderIt(TreeNode root) {
+		List<Integer> pre = new LinkedList<Integer>();
+		if(root==null) return pre;
+		Stack<TreeNode> tovisit = new Stack<TreeNode>();
+		tovisit.push(root);
+		while(!tovisit.empty()) {
+			TreeNode visiting = tovisit.pop();
+			pre.add(visiting.val);
+			if(visiting.right!=null) tovisit.push(visiting.right);
+			if(visiting.left!=null) tovisit.push(visiting.left);
+		}
+		return pre;
+	}
+  
