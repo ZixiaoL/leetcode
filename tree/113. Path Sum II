@@ -1,0 +1,33 @@
+Given a binary tree and a sum, find all root-to-leaf paths where each path's sum equals the given sum.
+Note: A leaf is a node with no children.
+
+//自写递归
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        vector<vector<int>> ans;
+        if(!root)return ans;
+        vector<int> v;
+        helper(root, sum, v, ans);
+        return ans;
+    }
+    void helper(TreeNode* root, int sum, vector<int> &v, vector<vector<int>> &ans){
+        v.push_back(root->val);
+        if(!root->left && !root->right && root->val == sum)ans.push_back(v);
+        if(root->left)helper(root->left, sum-root->val, v, ans);
+        if(root->right)helper(root->right, sum-root->val, v, ans);
+        v.pop_back();
+    }
+};
+
+//类似于先序的iteration
+https://leetcode.com/problems/path-sum-ii/discuss/36695/Java-Solution%3A-iterative-and-recursive
