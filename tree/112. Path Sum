@@ -1,0 +1,24 @@
+Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the values along the path equals the given sum.
+Note: A leaf is a node with no children.
+
+//自写递归
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasPathSum(TreeNode* root, int sum) {
+        if(!root)return false;
+        if(!root->left && !root->right)return root->val == sum;
+        return hasPathSum(root->left, sum-root->val) || hasPathSum(root->right, sum-root->val);
+    }
+};
+
+//遍历可以把父亲节点的值加到子节点上
+https://leetcode.com/problems/path-sum/discuss/36511/Recursive-and-iterative(level-order-traversal)-solution-in-C%2B%2Beasy-to-uns-understand
