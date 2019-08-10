@@ -1,0 +1,44 @@
+Given a binary tree, return all root-to-leaf paths.
+Note: A leaf is a node with no children.
+
+
+//自写递归
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> ans;
+        if(!root)return ans;
+        string s = to_string(root->val);
+        helper(root, s, ans);
+        return ans;
+    }
+    void helper(TreeNode* root, string &s, vector<string> &ans){
+        if(!root->left && !root->right)ans.push_back(s);
+        if(root->left){
+            s += "->"+to_string(root->left->val);
+            helper(root->left, s, ans);
+            int i = s.size()-1;
+            while(s[i] != '>')i--;
+            s.erase(i-1, s.size()-i+1);
+        }
+        if(root->right){
+            s += "->"+to_string(root->right->val);
+            helper(root->right, s, ans);
+            int i = s.size()-1;
+            while(s[i] != '>')i--;
+            s.erase(i-1, s.size()-i+1);
+        }   
+    }
+};
+
+//很聪明的iteration做法，路径也用栈存起来
+https://leetcode.com/problems/binary-tree-paths/discuss/68279/C%2B%2B-non-recursive-version-and-recursive-version
