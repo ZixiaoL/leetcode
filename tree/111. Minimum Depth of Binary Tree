@@ -1,0 +1,64 @@
+Given a binary tree, find its minimum depth.
+The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+Note: A leaf is a node with no children.
+
+//自写递归
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(!root)return 0;
+        int c = 0;
+        int ans = INT_MAX;
+        helper(root, c, ans);
+        return ans;
+    }
+    void helper(TreeNode* root, int c, int &ans){
+        c++;
+        if(!root->left && !root->right)ans = min(ans, c);
+        else{
+            if(root->left)helper(root->left, c, ans);
+            if(root->right)helper(root->right, c, ans);
+        }
+    }
+};
+
+//更好的递归
+//dfs
+class Solution {
+public:
+    int minDepth(TreeNode *root) {
+        if(!root) return 0;
+        if(!root->left) return 1 + minDepth(root->right);
+        if(!root->right) return 1 + minDepth(root->left);
+        return 1+min(minDepth(root->left),minDepth(root->right));
+    }
+};
+
+//bfs
+int minDepth(TreeNode* root) {
+    if (root == NULL) return 0;
+    queue<TreeNode*> Q;
+    Q.push(root);
+    int i = 0;
+    while (!Q.empty()) {
+        i++;
+        int k = Q.size();
+        for (int j=0; j<k; j++) {
+            TreeNode* rt = Q.front();
+            if (rt->left) Q.push(rt->left);
+            if (rt->right) Q.push(rt->right);
+            Q.pop();
+            if (rt->left==NULL && rt->right==NULL) return i;
+        }
+    }
+    return -1; //For the compiler thing. The code never runs here.
+}
