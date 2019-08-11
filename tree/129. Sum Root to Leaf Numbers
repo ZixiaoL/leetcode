@@ -1,0 +1,67 @@
+Given a binary tree containing digits from 0-9 only, each root-to-leaf path could represent a number.
+
+An example is the root-to-leaf path 1->2->3 which represents the number 123.
+
+Find the total sum of all root-to-leaf numbers.
+
+Note: A leaf is a node with no children.
+
+
+
+//自写递归
+
+/**
+
+ * Definition for a binary tree node.
+
+ * struct TreeNode {
+
+ *     int val;
+
+ *     TreeNode *left;
+
+ *     TreeNode *right;
+
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+
+ * };
+
+ */
+
+class Solution {
+
+public:
+
+    int sumNumbers(TreeNode* root) {
+
+        if(!root)return 0;
+
+        int c = 0;
+
+        int ans = 0;
+
+        helper(root, c, ans);
+
+        return ans;
+
+    }
+
+    void helper(TreeNode* root, int c, int &ans){
+
+        c *= 10;
+
+        c += root->val;
+
+        if(!root->left && !root->right)ans += c;
+
+        else{
+
+            if(root->left)helper(root->left, c, ans);
+
+            if(root->right)helper(root->right, c, ans);
+
+        }
+
+    }
+
+};
