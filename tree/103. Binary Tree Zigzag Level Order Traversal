@@ -1,3 +1,37 @@
 Given a binary tree, return the zigzag level order traversal of its nodes' values. (ie, from left to right, then right to left for the next level and alternate between).
 
-。
+//自写bfs
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> ans;
+        if(!root)return ans;        
+        deque<TreeNode*> s;
+        s.push_back(root);
+        while(!s.empty()){
+            vector<int> t;
+            int size = s.size();
+            for(int i = 0; i < size; i++){
+                TreeNode* v = s.front();
+                s.pop_front();
+                t.push_back(v->val);
+                if(v->left)s.push_back(v->left);
+                if(v->right)s.push_back(v->right);
+            }
+            ans.push_back(t);
+        }
+        for(int i = 1; i < ans.size(); i+=2){
+            reverse(ans[i].begin(), ans[i].end());
+        }
+        return ans;
+    }        
+};
