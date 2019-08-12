@@ -1,0 +1,52 @@
+Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+
+//自写bfs
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> ans;
+        if(!root)return ans;        
+        deque<TreeNode*> s;
+        TreeNode* v;
+        s.push_back(root);
+        while(!s.empty()){
+            int size = s.size();
+            for(int i = 0; i < size; i++){
+                v = s.front();
+                s.pop_front();
+                if(v->left)s.push_back(v->left);
+                if(v->right)s.push_back(v->right);
+            }
+            ans.push_back(v->val);
+        }
+        return ans;
+    }  
+};
+
+//dfs
+class Solution {
+    public List<Integer> rightSideView(TreeNode root) {
+        List<Integer> res = new ArrayList<>();
+        if (root == null) return res;
+        dfs(root, 0, res);
+        return res;
+    }
+    
+    void dfs(TreeNode x, int level, List<Integer> res) {
+        if (x == null) return;
+        
+        if (res.size() == level) res.add(x.val);
+
+        dfs(x.right, level + 1, res);
+        dfs(x.left, level + 1, res);        
+    }
+}
