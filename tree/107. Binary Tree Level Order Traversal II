@@ -1,0 +1,67 @@
+Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
+
+//自写bfs击败10%
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrderBottom(TreeNode* root) {
+        vector<vector<int>> ans;
+        if(!root)return ans;        
+        deque<TreeNode*> s;
+        s.push_back(root);
+        while(!s.empty()){
+            vector<int> t;
+            int size = s.size();
+            for(int i = 0; i < size; i++){
+                TreeNode* v = s.front();
+                s.pop_front();
+                t.push_back(v->val);
+                if(v->left)s.push_back(v->left);
+                if(v->right)s.push_back(v->right);
+            }
+            ans.insert(ans.begin(), t);
+        }
+        return ans;
+    }
+};
+
+
+//
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+int depth(TreeNode *root) {
+    if (!root) return 0;
+    return max(depth(root->left),depth(root->right))+1;
+}
+
+void levelOrder(vector<vector<int>> &ans, TreeNode *node, int level) {
+    if (!node) return;
+    ans[level].push_back(node->val);
+    levelOrder(ans,node->left,level-1);
+    levelOrder(ans,node->right,level-1);
+}
+
+vector<vector<int>> levelOrderBottom(TreeNode* root) {
+    int d = depth(root);
+    vector<vector<int>> ans(d,vector<int> {});
+    levelOrder(ans,root,d-1);
+    return ans;
+}
+};
