@@ -1,0 +1,37 @@
+Given inorder and postorder traversal of a tree, construct the binary tree.
+Note:
+You may assume that duplicates do not exist in the tree.
+
+//根据上一题写的
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+TreeNode *buildTree(vector<int> &inorder, vector<int> &postorder) {
+    return create(inorder, postorder, 0, postorder.size() - 1, 0, inorder.size() - 1);
+}
+
+TreeNode* create(vector<int>& inorder, vector<int>& postorder, int ps, int pe, int is, int ie){
+    if(ps > pe){
+        return nullptr;
+    }
+    TreeNode* node = new TreeNode(postorder[pe]);
+    int pos;
+    for(int i = is; i <= ie; i++){
+        if(inorder[i] == node->val){
+            pos = i;
+            break;
+        }
+    }
+    node->left = create(inorder, postorder, ps, ps + pos - is - 1, is, pos - 1);
+    node->right = create(inorder, postorder, pe - ie + pos, pe - 1, pos + 1, ie);
+    return node;
+}
+};
