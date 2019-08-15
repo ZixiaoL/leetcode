@@ -1,0 +1,28 @@
+Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
+Each number in candidates may only be used once in the combination.
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+
+//自写99%
+class Solution {
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        sort(candidates.begin(), candidates.end());
+        helper(candidates, target, 0, temp, ans);
+        return ans;
+    }
+    void helper(vector<int>& candidates, int target, int i, vector<int>& temp, vector<vector<int>>& ans){
+        if(target == 0)ans.push_back(temp);
+        else if(i >= candidates.size() || target < candidates[i])return;
+        else{
+            temp.push_back(candidates[i]);
+            helper(candidates, target-candidates[i], i+1, temp, ans);
+            temp.pop_back();
+            while(i < candidates.size()-1 && candidates[i+1] == candidates[i])i++;
+            helper(candidates, target, i+1, temp, ans);
+        }
+    }
+};
