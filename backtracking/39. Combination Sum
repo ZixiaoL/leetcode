@@ -1,0 +1,27 @@
+Given a set of candidate numbers (candidates) (without duplicates) and a target number (target), find all unique combinations in candidates where the candidate numbers sums to target.
+The same repeated number may be chosen from candidates unlimited number of times.
+Note:
+All numbers (including target) will be positive integers.
+The solution set must not contain duplicate combinations.
+
+//自写击败98%
+class Solution {
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        sort(candidates.begin(), candidates.end());
+        helper(candidates, target, 0, temp, ans);
+        return ans;
+    }
+    void helper(vector<int>& candidates, int target, int i, vector<int>& temp, vector<vector<int>>& ans){
+        if(target == 0)ans.push_back(temp);
+        else if(i >= candidates.size() || target < candidates[i])return;
+        else{
+            helper(candidates, target, i+1, temp, ans);
+            temp.push_back(candidates[i]);
+            helper(candidates, target-candidates[i], i, temp, ans);
+            temp.pop_back();
+        }
+    }
+};
