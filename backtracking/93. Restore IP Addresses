@@ -1,0 +1,65 @@
+//Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+
+//自写5%
+class Solution {
+public:
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> ans;
+        string temp;
+        helper(s, temp, ans, 4);
+        return ans;
+    }
+    void helper(string s, string& temp, vector<string>& ans, int k){
+        if(k == 0 && s.size() == 0)ans.push_back(temp.substr(1));
+        if(k <= 0 || s.size() == 0)return;
+        if(s[0] == '0'){
+            temp += ".";
+            temp += s[0];
+            helper(s.substr(1), temp, ans, k-1);
+            temp.erase(temp.size()-2, 2);
+        }
+        else{
+            temp += ".";
+            temp += s[0];
+            helper(s.substr(1), temp, ans, k-1);
+            temp.erase(temp.size()-2, 2);
+            if(s.size() >= 2){
+                temp += ".";
+                temp += s.substr(0, 2);
+                helper(s.substr(2), temp, ans, k-1);
+                temp.erase(temp.size()-3, 3);                
+            }
+            if(s.size() >= 3 && stoi(s.substr(0, 3)) <= 255){
+                temp += ".";
+                temp += s.substr(0, 3);
+                helper(s.substr(3), temp, ans, k-1);
+                temp.erase(temp.size()-4, 4);                
+            }            
+        }
+    }
+};.
+
+//666666
+class Solution {
+public:
+    vector<string> restoreIpAddresses(string s) {
+        vector<string> ret;
+        string ans;
+        
+        for (int a=1; a<=3; a++)
+        for (int b=1; b<=3; b++)
+        for (int c=1; c<=3; c++)
+        for (int d=1; d<=3; d++)
+            if (a+b+c+d == s.length()) {
+                int A = stoi(s.substr(0, a));
+                int B = stoi(s.substr(a, b));
+                int C = stoi(s.substr(a+b, c));
+                int D = stoi(s.substr(a+b+c, d));
+                if (A<=255 && B<=255 && C<=255 && D<=255)
+                    if ( (ans=to_string(A)+"."+to_string(B)+"."+to_string(C)+"."+to_string(D)).length() == s.length()+3)
+                        ret.push_back(ans);
+            }    
+        
+        return ret;
+    }
+};
