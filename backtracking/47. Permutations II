@@ -1,0 +1,25 @@
+//Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+
+//自写
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        sort(nums.begin(), nums.end());
+        helper(nums, 0, temp, ans);
+        return ans;
+    }
+    void helper(vector<int> nums, int i, vector<int>& temp, vector<vector<int>>& ans){
+        if(nums.size() == 0)ans.push_back(temp);
+        else if(i >= nums.size())return;
+        else{
+            int c = nums[i];
+            temp.push_back(c);
+            helper(nums, 0, temp, ans);
+            temp.pop_back();
+            while(i < nums.size()-1 && nums[i] == nums[i+1])i++;
+            helper(nums, i+1, temp, ans);
+            }
+    }
+};
