@@ -1,0 +1,20 @@
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+//自写
+class Solution {
+public:
+    int numSquares(int n) {
+        vector<int> v(n+1, INT_MAX);
+        v[0] = 0;
+        for(int i = 1; i <= n; i++){
+            int j = 1;
+            while(j*j <= i){
+                v[i] = min(v[i], v[i-j*j]+1);
+                j++;
+            }
+        }
+        return v[n];
+    }
+};
+
+//https://leetcode.com/problems/perfect-squares/discuss/71488/Summary-of-4-different-solutions-(BFS-DP-static-DP-and-mathematics)
