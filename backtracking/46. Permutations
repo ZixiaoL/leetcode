@@ -1,0 +1,24 @@
+//Given a collection of distinct integers, return all possible permutations.
+
+//
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        helper(nums, 0, temp, ans);
+        return ans;
+    }
+    void helper(vector<int>& nums, int i, vector<int>& temp, vector<vector<int>>& ans){
+        if(nums.size() == 0)ans.push_back(temp);
+        else{
+            int c = nums[i];
+            temp.push_back(c);
+            nums.erase(nums.begin()+i);
+            helper(nums, 0, temp, ans);
+            temp.pop_back();
+            nums.insert(nums.begin()+i, c);
+            if(i < nums.size()-1)helper(nums, i+1, temp, ans);
+        }
+    }
+};
