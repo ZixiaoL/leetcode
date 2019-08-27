@@ -1,0 +1,59 @@
+//Given s1, s2, s3, find whether s3 is formed by the interleaving of s1 and s2.
+
+//自写二维dp
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        long m = s1.size();
+        long n = s2.size();
+        if(m+n != s3.size())return false;
+        if(m == 0)return s2 == s3;
+        if(n == 0)return s1 == s3;
+        vector<vector<bool>> v(m+1, vector<bool>(n+1, false));
+        for(int i = 1; i <= m; i++){
+            if(s1[i-1] == s3[i-1])v[i][0] = true;
+            else break;
+        }
+        for(int j = 1; j <= n; j++){
+            if(s2[j-1] == s3[j-1])v[0][j] = true;
+            else break;
+        }        
+        for(int i = 1; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                if(v[i-1][j] == true && s1[i-1] == s3[i+j-1])v[i][j] = true;
+                if(v[i][j-1] == true && s2[j-1] == s3[i+j-1])v[i][j] = true;
+            }
+        }
+        return v[m][n];
+    }
+};
+
+//自改一维
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        int m = s1.size();
+        int n = s2.size();
+        if(m+n != s3.size())return false;
+        if(n == 0)return s1 == s3;
+        vector<bool> v(n+1, false);
+        int k = 0;
+        for(int i = 1; i <= m; i++){
+            if(s1[i-1] == s3[i-1])k++;
+            else break;
+        }
+        for(int j = 1; j <= n; j++){
+            if(s2[j-1] == s3[j-1])v[j] = true;
+            else break;
+        }        
+        for(int i = 1; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                if(i <= k)v[0] = true;
+                if(v[j] == true && s1[i-1] == s3[i+j-1])v[j] = true;
+                else if(v[j-1] == true && s2[j-1] == s3[i+j-1])v[j] = true;
+                else v[j] = false;
+            }
+        }
+        return v[n];
+    }
+};
