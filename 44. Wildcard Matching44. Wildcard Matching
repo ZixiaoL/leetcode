@@ -1,0 +1,29 @@
+Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*'.
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+The matching should cover the entire input string (not partial).
+Note:
+s could be empty and contains only lowercase letters a-z.
+p could be empty and contains only lowercase letters a-z, and characters like ? or *.
+
+//自写
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m = s.size();
+        int n = p.size();
+        vector<vector<int>> v(m+1, vector<int> (n+1, 0));
+        v[0][0] = true;
+        int k = 0;
+        while(k < n && p[k++] == '*')v[0][k] = true;
+        for(int i = 1 ; i <= m; i++){
+            for(int j = 1; j <= n; j++){
+                if(s[i-1] == p[j-1] || p[j-1] == '?')v[i][j] = v[i-1][j-1];
+                else if(p[j-1] == '*')v[i][j] = v[i-1][j-1] || v[i-1][j] || v[i][j-1];
+            }
+        }
+        return v[m][n];
+    }
+};
+
+//https://leetcode.com/problems/wildcard-matching/discuss/17810/Linear-runtime-and-constant-space-solution
