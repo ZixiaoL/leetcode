@@ -1,0 +1,55 @@
+Given a singly linked list, group all odd nodes together followed by the even nodes. Please note here we are talking about the node number and not the value in the nodes.
+You should try to do it in place. The program should run in O(1) space complexity and O(nodes) time complexity.
+
+//自写
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        if(!head || !head->next)return head;
+        ListNode* lastodd = head;
+        ListNode* firstodd = head;
+        ListNode* firsteven = head->next;
+        ListNode* lasteven = head->next;
+        bool odd = true;
+        head = head->next->next;
+        ListNode* next = head;
+        while(head){
+            if(odd){
+                lasteven->next = head->next;
+                lastodd->next = head;
+                head->next = firsteven;
+                lastodd = head;
+                head = lasteven->next;
+            }else{
+                head = head->next;
+                lasteven = lasteven->next;
+            }
+            odd = !odd;            
+        }
+        return firstodd;
+    }
+};
+
+//
+public class Solution {
+    public ListNode oddEvenList(ListNode head) {
+        if (head == null) return null;
+        ListNode odd = head, even = head.next, evenHead = even;
+        while (even != null && even.next != null) {
+            odd.next = even.next;
+            odd = odd.next;
+            even.next = odd.next;
+            even = even.next;
+        }
+        odd.next = evenHead;
+        return head;
+    }
+}
