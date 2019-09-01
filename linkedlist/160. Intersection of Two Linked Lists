@@ -1,0 +1,29 @@
+//Write a program to find the node at which the intersection of two singly linked lists begins.
+
+//Approach 1: Brute Force
+For each node ai in list A, traverse the entire list B and check if any node in list B coincides with ai.
+
+//Approach 2: Hash Table
+Traverse list A and store the address / reference to each node in a hash set. Then check every node bi in list B: if bi appears in the hash set, then bi is the intersection node.
+
+//Approach 3: Two Pointers
+hA->tail->hB, hB->tail->hA
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+    ListNode *cur1 = headA, *cur2 = headB;
+    while(cur1 != cur2){
+        cur1 = cur1?cur1->next:headB;
+        cur2 = cur2?cur2->next:headA;
+    }
+    return cur1;
+}
+};
