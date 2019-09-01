@@ -1,0 +1,34 @@
+//Write a function to delete a node (except the tail) in a singly linked list, given only access to that node.
+
+//自写
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        ListNode* pre = node;
+        while(pre->next->next){
+            pre->val = pre->next->val;
+            pre = pre->next;
+        }
+        pre->val = pre->next->val;
+        pre->next = NULL;
+    }
+};
+
+//Approach: Swap with Next Node [Accepted]
+public void deleteNode(ListNode node) {
+    node.val = node.next.val;
+    node.next = node.next.next;
+}
+
+//
+void deleteNode(ListNode* node) {
+    *node = *node->next;
+}
