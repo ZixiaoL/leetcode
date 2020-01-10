@@ -1,0 +1,24 @@
+Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+
+You may assume no duplicates in the array.
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int hi=nums.size()-1;
+        int mi=hi>>1;
+        int ans;
+        if(nums.size()==0)return 0;
+        if(nums.size()==1)return nums[mi]>=target? mi:mi+1;
+        if(nums[mi]>target){
+            vector<int> d(nums.begin(),nums.begin()+mi+1);
+            ans=searchInsert(d,target);
+        }
+        else if(nums[mi]<target){
+            vector<int> d(nums.begin()+mi+1,nums.end());
+            ans=mi+1+searchInsert(d,target);
+        }
+        else ans=mi;
+        return ans;
+    }
+};
