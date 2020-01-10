@@ -1,5 +1,10 @@
 Given two arrays, write a function to compute their intersection.
 
+Note:
+
+Each element in the result must be unique.
+The result can be in any order.
+
 class Solution {
 public:
 vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
