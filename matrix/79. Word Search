@@ -1,0 +1,39 @@
+Given a 2D board and a word, find if the word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+//临时改变board[i][j]值到e.g. '*'，可以不用seen
+class Solution {
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        if(word.size() == 0)return true;
+        if(board.size() == 0)return false;
+        int m = board.size();
+        int n = board[0].size();
+        vector<vector<bool>> seen(m, vector<bool>(n, false));
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(existHelper(board, i, j, word, seen))return true;
+            }
+        }
+        return false;
+    }
+    
+    bool existHelper(vector<vector<char>>& board, int i, int j, string word, vector<vector<bool>>& seen) {
+        if(seen[i][j] == true)return false;
+        seen[i][j] = true;
+        if(board[i][j] == word[0]) {
+            word = word.substr(1);
+            if(word.size() == 0)return true;
+            if(i != 0 && existHelper(board, i-1, j, word, seen) ||
+               i != board.size()-1 && existHelper(board, i+1, j, word, seen) ||
+               j != 0 && existHelper(board, i, j-1, word, seen) ||
+               j != board[0].size()-1 && existHelper(board, i, j+1, word, seen)){
+                seen[i][j] = false;
+                return true;
+            }
+        }
+        seen[i][j] = false;
+        return false;
+    }
+};
