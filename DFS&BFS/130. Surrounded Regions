@@ -1,0 +1,41 @@
+//Given a 2D board containing 'X' and 'O' (the letter O), capture all regions surrounded by 'X'.
+
+//A region is captured by flipping all 'O's into 'X's in that surrounded region.
+
+class Solution {
+public:
+    void solve(vector<vector<char>>& board) {
+        int m = board.size();
+        if(m == 0)return;
+        int n = board[0].size();
+        for(int i = 0; i < m; i++) {
+            if(board[i][0] == 'O') {
+                helper(board, i, 0, 'T');
+            }
+            if(board[i][n-1] == 'O') {
+                helper(board, i, n-1, 'T');
+            }
+        }
+        for(int j = 0; j < n; j++) {
+            if(board[0][j] == 'O') {
+                helper(board, 0, j, 'T');
+            }
+            if(board[m-1][j] == 'O') {
+                helper(board, m-1, j, 'T');
+            }
+        }
+        for(int i = 0; i < m; i++) {
+            for(int j = 0; j < n; j++) {
+                if(board[i][j] == 'T')board[i][j] = 'O';
+                else board[i][j] = 'X';
+            }
+        }
+    }
+    void helper(vector<vector<char>>& grid, int i, int j, char c) {
+        grid[i][j] = c;
+        if(i > 0 && grid[i-1][j] == 'O')helper(grid, i-1, j, c);
+        if(j > 0 && grid[i][j-1] == 'O')helper(grid, i, j-1, c);
+        if(i < grid.size()-1 && grid[i+1][j] == 'O')helper(grid, i+1, j, c);
+        if(j < grid[0].size()-1 && grid[i][j+1] == 'O')helper(grid, i, j+1, c);
+    }    
+};
